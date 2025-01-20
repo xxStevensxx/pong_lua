@@ -78,7 +78,7 @@ function love.update(dt)
     balle.x = balle.x + balle.vitesse_x
     balle.y = balle.y + balle.vitesse_y
 
-
+    -- rebond bas ecran
     if balle.y > love.graphics.getHeight() - balle.hauteur then
         -- on inverse la direction de la balle quand elle entre en contact avec le bord bas avec *1 a la fin de l'element ou 0- ou - avant l'element
         balle.vitesse_y = -balle.vitesse_y
@@ -86,13 +86,24 @@ function love.update(dt)
         balle.vitesse_y = -balle.vitesse_y
     end
 
-
+    -- Rebond haut
     if balle.x > love.graphics.getWidth() - balle.largeur then
         -- on inverse la direction de la balle avec *1 a la fin de l'element ou 0- ou - avant l'element
         balle.vitesse_x = -balle.vitesse_x
     elseif balle.x < 0 then
         balle.vitesse_x = -balle.vitesse_x
     end
+
+    -- Défaite du joueur de droite
+    if balle.x + balle.largeur > love.graphics.getWidth() then
+        score.joueurUn = score.joueurUn + 1
+    end
+
+    -- Défaite du joueur de gauche
+    if balle.x < 0 then 
+        score.joueurDeux = score.joueurDeux + 1
+    end
+
     
     -- On verifie si la balle a atteint la raquette gauche
     if balle.x <= padG.x + padG.largeur then
@@ -135,12 +146,11 @@ function love.draw()
     love.graphics.rectangle("fill", padD.x, padD.y, padD.largeur, padD.hauteur)
 
     love.graphics.rectangle("fill", balle.x, balle.y, balle.largeur, balle.hauteur)
-    --   on affiche le score
-    love.graphics.print("Score :", love.graphics.getWidth()/2, 20, score.joueurUn)
-end
 
--- print(love.graphics.getHeight())
--- print(love.graphics.getWidth())
+    --   formate l'affichage et on affiche le score
+    scorejoueurs = score.joueurUn.." - "..score.joueurDeux
+    love.graphics.print(scorejoueurs, love.graphics.getWidth()/2, 20)
+end
 
 
 function love.keypressed(key)
